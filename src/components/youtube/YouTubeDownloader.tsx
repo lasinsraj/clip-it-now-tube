@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { getVideoInfo } from "@/services/youtubeService";
 import { useToast } from "@/components/ui/use-toast";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { InfoIcon } from "lucide-react";
 
 interface VideoDetails {
   title: string;
@@ -50,6 +51,11 @@ const YouTubeDownloader = () => {
       
       setVideoData(data);
       setVideoUrl(url);
+      
+      toast({
+        title: "Success!",
+        description: "Video information retrieved successfully",
+      });
     } catch (error) {
       console.error("Error fetching video info:", error);
       const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
@@ -86,10 +92,16 @@ const YouTubeDownloader = () => {
         <UrlInput onFetchInfo={handleFetchInfo} isLoading={loading} />
         
         {error && (
-          <div className="mt-4 p-4 bg-destructive/10 text-destructive rounded-md">
-            <p>Error: {error}</p>
-            <p className="text-sm mt-2">Please ensure the YouTube URL is valid and the server is running.</p>
-          </div>
+          <Alert variant="destructive" className="mt-4 mx-auto max-w-3xl">
+            <InfoIcon className="h-4 w-4" />
+            <AlertDescription>
+              <p className="font-medium">Error: {error}</p>
+              <p className="text-sm mt-2">
+                Please ensure the YouTube URL is valid and the server is running.
+                {import.meta.env.DEV && " For local development, make sure your backend is running on port 3001."}
+              </p>
+            </AlertDescription>
+          </Alert>
         )}
       </section>
 

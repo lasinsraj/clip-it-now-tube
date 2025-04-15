@@ -10,11 +10,18 @@
   status = 200
 
 # Proxy API requests to the backend server
-# Replace with your actual backend URL when deployed
+# For local development:
 [[redirects]]
   from = "/api/*"
   to = "http://localhost:3001/api/:splat"
   status = 200
   force = true
-  headers = {X-From = "Netlify"}
+  conditions = {Role = ["dev"]}
 
+# For production (UPDATE THIS WITH YOUR ACTUAL DEPLOYED BACKEND URL):
+[[redirects]]
+  from = "/api/*"
+  to = "https://your-backend-url.com/api/:splat"
+  status = 200
+  force = true
+  headers = {X-From = "Netlify"}
