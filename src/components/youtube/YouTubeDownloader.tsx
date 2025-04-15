@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import UrlInput from "./UrlInput";
 import VideoInfo from "./VideoInfo";
 import FormatSelector from "./FormatSelector";
@@ -30,16 +30,28 @@ const YouTubeDownloader = () => {
   const [videoData, setVideoData] = useState<VideoDetails | null>(null);
   const [loading, setLoading] = useState(false);
   const [videoUrl, setVideoUrl] = useState("");
+  const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
 
   const handleFetchInfo = async (url: string) => {
     setLoading(true);
+    setError(null);
+    
     try {
+      console.log("Fetching video info for:", url);
       const data = await getVideoInfo(url);
+      console.log("Received video data:", data);
+      
+      if (!data || !data.title) {
+        throw new Error("Invalid or incomplete video data received");
+      }
+      
       setVideoData(data);
       setVideoUrl(url);
     } catch (error) {
       console.error("Error fetching video info:", error);
+      const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
+      setError(errorMessage);
       toast({
         title: "Error",
         description: "Failed to fetch video information. Please try again.",
@@ -52,6 +64,16 @@ const YouTubeDownloader = () => {
     }
   };
 
+  // For debugging purposes
+  useEffect(() => {
+    if (error) {
+      console.error("Error state:", error);
+    }
+    if (videoData) {
+      console.log("Video data loaded:", videoData);
+    }
+  }, [error, videoData]);
+
   return (
     <div className="flex flex-col gap-8">
       <section className="text-center">
@@ -62,6 +84,13 @@ const YouTubeDownloader = () => {
           Download videos and audio from YouTube in various formats. Just paste the URL below and select your preferred format.
         </p>
         <UrlInput onFetchInfo={handleFetchInfo} isLoading={loading} />
+        
+        {error && (
+          <div className="mt-4 p-4 bg-destructive/10 text-destructive rounded-md">
+            <p>Error: {error}</p>
+            <p className="text-sm mt-2">Please ensure the YouTube URL is valid and the server is running.</p>
+          </div>
+        )}
       </section>
 
       {videoData && (
@@ -90,6 +119,9 @@ const YouTubeDownloader = () => {
               <li>Choose your preferred format and quality.</li>
               <li>Click the download button next to your chosen format.</li>
             </ol>
+            <p className="mt-4 text-sm text-muted-foreground">
+              Disclaimer: Please respect copyright laws and only download videos you have permission to access.
+            </p>
           </CardContent>
         </Card>
       </section>
