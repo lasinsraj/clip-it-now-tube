@@ -6,8 +6,8 @@ import FormatSelector from "./FormatSelector";
 import { Card, CardContent } from "@/components/ui/card";
 import { getVideoInfo } from "@/services/youtubeService";
 import { useToast } from "@/components/ui/use-toast";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { InfoIcon } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { InfoIcon, AlertTriangleIcon } from "lucide-react";
 
 interface VideoDetails {
   title: string;
@@ -58,7 +58,15 @@ const YouTubeDownloader = () => {
       });
     } catch (error) {
       console.error("Error fetching video info:", error);
-      const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
+      let errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
+      
+      // Check for common error messages and make them more user-friendly
+      if (errorMessage.includes('HTML instead of JSON')) {
+        errorMessage = "Invalid data format: received HTML instead of JSON";
+      } else if (errorMessage.includes('Network Error')) {
+        errorMessage = "Network error: Cannot connect to the server. Please check if the backend is running.";
+      }
+      
       setError(errorMessage);
       toast({
         title: "Error",
@@ -93,9 +101,10 @@ const YouTubeDownloader = () => {
         
         {error && (
           <Alert variant="destructive" className="mt-4 mx-auto max-w-3xl">
-            <InfoIcon className="h-4 w-4" />
+            <AlertTriangleIcon className="h-4 w-4" />
+            <AlertTitle>Error</AlertTitle>
             <AlertDescription>
-              <p className="font-medium">Error: {error}</p>
+              <p>{error}</p>
               <p className="text-sm mt-2">
                 Please ensure the YouTube URL is valid and the server is running.
                 {import.meta.env.DEV && " For local development, make sure your backend is running on port 3001."}

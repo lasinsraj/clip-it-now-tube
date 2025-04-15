@@ -28,8 +28,9 @@ console.log('Current environment:', import.meta.env.MODE);
 
 // In development with Vite, we may need to use the actual server URL
 if (import.meta.env.DEV) {
-  // You can uncomment this if needed for local development
-  // API_URL = 'http://localhost:3001/api';
+  // Using absolute URL for local development
+  API_URL = 'http://localhost:3001/api';
+  console.log('Development mode detected, using direct URL to backend');
 }
 
 console.log('Using API URL:', API_URL);
@@ -43,7 +44,17 @@ export const getVideoInfo = async (url: string): Promise<VideoInfo> => {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-      }
+      },
+      // Prevent axios from parsing the response if it's not valid JSON
+      transformResponse: [(data) => {
+        try {
+          return JSON.parse(data);
+        } catch (e) {
+          console.error('Failed to parse response as JSON:', data);
+          // Return the raw data to be handled in the catch block
+          return data;
+        }
+      }]
     });
     
     console.log('API Response status:', response.status);
@@ -72,6 +83,13 @@ export const getVideoInfo = async (url: string): Promise<VideoInfo> => {
         console.error('Error status:', error.response.status);
         console.error('Error data:', error.response.data);
         console.error('Error headers:', error.response.headers);
+        
+        // If we received HTML instead of JSON
+        if (typeof error.response.data === 'string' && 
+            error.response.data.includes('<!DOCTYPE html>')) {
+          throw new Error('Invalid data format: received HTML instead of JSON');
+        }
+        
         throw new Error(`API Error (${error.response.status}): ${JSON.stringify(error.response.data)}`);
       } else if (error.request) {
         console.error('No response received, request:', error.request);
