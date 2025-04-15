@@ -1,73 +1,102 @@
-# Welcome to your Lovable project
 
-## Project info
+# YouTube Video Downloader
 
-**URL**: https://lovable.dev/projects/60718f5d-e332-4742-8928-0ded0f6f6a11
+A modern, responsive YouTube video downloader web application built with React, TypeScript, and Node.js.
 
-## How can I edit this code?
+## Features
 
-There are several ways of editing your application.
+- Clean, intuitive user interface with responsive design
+- Paste YouTube URL to fetch video details (title, thumbnail, duration)
+- Download videos in various qualities (360p, 720p, 1080p)
+- Download audio in MP3 format
+- Mobile-friendly layout
+- Ad spaces included for monetization
 
-**Use Lovable**
+## Tech Stack
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/60718f5d-e332-4742-8928-0ded0f6f6a11) and start prompting.
+### Frontend
+- React with TypeScript
+- Tailwind CSS for styling
+- Axios for API requests
+- Shadcn UI components
 
-Changes made via Lovable will be committed automatically to this repo.
+### Backend
+- Node.js with Express
+- ytdl-core for YouTube downloads
+- CORS middleware for cross-origin requests
 
-**Use your preferred IDE**
+## Development Setup
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+1. Clone the repository
+2. Install dependencies:
+   ```
+   npm install
+   ```
+3. Start the development server:
+   ```
+   npm run dev
+   ```
+4. In a separate terminal, start the backend server:
+   ```
+   node server.js
+   ```
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## Deployment Instructions
 
-Follow these steps:
+### Backend Deployment
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+1. Deploy the Express backend to a platform like Heroku, Render, or Railway:
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+   ```bash
+   # Login to Heroku
+   heroku login
+   
+   # Create a new Heroku app
+   heroku create your-app-name
+   
+   # Push to Heroku
+   git push heroku main
+   ```
 
-# Step 3: Install the necessary dependencies.
-npm i
+2. Make sure to update the API_URL in `src/services/youtubeService.ts` to point to your deployed backend URL.
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+### Frontend Deployment on Netlify
 
-**Edit a file directly in GitHub**
+1. Build the project:
+   ```
+   npm run build
+   ```
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+2. Deploy to Netlify:
 
-**Use GitHub Codespaces**
+   a. Sign up or log in to [Netlify](https://www.netlify.com/)
+   
+   b. Drag and drop the `dist` folder to Netlify's upload area, or
+   
+   c. Connect your GitHub repository:
+      - From the Netlify dashboard, click "New site from Git"
+      - Select GitHub and choose your repository
+      - Configure build settings:
+        - Build command: `npm run build`
+        - Publish directory: `dist`
+      
+   d. Under site settings, configure redirects by creating a `_redirects` file in the public directory:
+      ```
+      /* /index.html 200
+      ```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+   e. Configure environment variables if needed
 
-## What technologies are used for this project?
+3. Set up a proxy for API requests:
+   - Create a Netlify function or use Netlify's rewrites to proxy requests to your backend
 
-This project is built with:
+## Important Notes
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+- This application is for educational purposes only
+- Users should respect copyright laws and the rights of content creators
+- Only download videos that you have permission to download
+- Some content may be protected by copyright laws
 
-## How can I deploy this project?
+## License
 
-Simply open [Lovable](https://lovable.dev/projects/60718f5d-e332-4742-8928-0ded0f6f6a11) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+This project is licensed under the MIT License - see the LICENSE file for details.

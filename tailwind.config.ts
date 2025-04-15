@@ -52,6 +52,12 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				youtube: '#FF0000',
+                gradient: {
+                    start: '#8B5CF6',
+                    mid: '#6366F1',
+                    end: '#0EA5E9'
+                },
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',
