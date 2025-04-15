@@ -20,8 +20,16 @@ interface VideoFormat {
   bitrate: number;
 }
 
-// Use relative URL for API which will be proxied by the server
-const API_URL = '/api';
+// Determine API base URL based on environment
+let API_URL = '/api';
+
+// In development with Vite, we may need to use the actual server URL
+if (import.meta.env.DEV) {
+  // You can uncomment and use this if the proxy isn't working in development
+  // API_URL = 'http://localhost:3001/api';
+}
+
+console.log('Using API URL:', API_URL);
 
 export const getVideoInfo = async (url: string): Promise<VideoInfo> => {
   try {
@@ -35,6 +43,12 @@ export const getVideoInfo = async (url: string): Promise<VideoInfo> => {
     
     if (!response.data) {
       throw new Error('No data received from API');
+    }
+    
+    // Add extra validation for the expected data format
+    if (typeof response.data === 'string' || !response.data.title || !response.data.videoFormats) {
+      console.error('Received invalid data format:', response.data);
+      throw new Error('Invalid data format received from server');
     }
     
     return response.data;

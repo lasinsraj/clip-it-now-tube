@@ -6,6 +6,7 @@ import FormatSelector from "./FormatSelector";
 import { Card, CardContent } from "@/components/ui/card";
 import { getVideoInfo } from "@/services/youtubeService";
 import { useToast } from "@/components/ui/use-toast";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface VideoDetails {
   title: string;
@@ -36,6 +37,7 @@ const YouTubeDownloader = () => {
   const handleFetchInfo = async (url: string) => {
     setLoading(true);
     setError(null);
+    setVideoData(null); // Reset video data to prevent UI issues
     
     try {
       console.log("Fetching video info for:", url);
@@ -57,8 +59,6 @@ const YouTubeDownloader = () => {
         description: "Failed to fetch video information. Please try again.",
         variant: "destructive",
       });
-      // Reset videoData to prevent UI issues
-      setVideoData(null);
     } finally {
       setLoading(false);
     }
