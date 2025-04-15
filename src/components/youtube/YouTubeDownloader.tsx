@@ -45,6 +45,8 @@ const YouTubeDownloader = () => {
         description: "Failed to fetch video information. Please try again.",
         variant: "destructive",
       });
+      // Reset videoData to prevent UI issues
+      setVideoData(null);
     } finally {
       setLoading(false);
     }

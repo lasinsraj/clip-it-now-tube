@@ -9,8 +9,8 @@ import { formatFileSize } from "@/lib/utils";
 
 interface FormatSelectorProps {
   url: string;
-  videoFormats: VideoFormat[];
-  audioFormats: VideoFormat[];
+  videoFormats: VideoFormat[] | undefined;
+  audioFormats: VideoFormat[] | undefined;
 }
 
 interface VideoFormat {
@@ -24,11 +24,11 @@ interface VideoFormat {
   bitrate: number;
 }
 
-const FormatSelector = ({ url, videoFormats, audioFormats }: FormatSelectorProps) => {
+const FormatSelector = ({ url, videoFormats = [], audioFormats = [] }: FormatSelectorProps) => {
   const [activeTab, setActiveTab] = useState("video");
   
-  // Filter and sort video formats by quality
-  const filteredVideoFormats = videoFormats
+  // Filter and sort video formats by quality - with a defensive check
+  const filteredVideoFormats = (videoFormats || [])
     .filter(format => ["360p", "720p", "1080p"].includes(format.quality))
     .sort((a, b) => {
       const qualityMap: Record<string, number> = {
@@ -39,9 +39,9 @@ const FormatSelector = ({ url, videoFormats, audioFormats }: FormatSelectorProps
       return qualityMap[b.quality] - qualityMap[a.quality];
     });
   
-  // Get highest quality audio format
-  const bestAudioFormat = audioFormats.length > 0 
-    ? audioFormats.sort((a, b) => b.bitrate - a.bitrate)[0]
+  // Get highest quality audio format - with a defensive check
+  const bestAudioFormat = (audioFormats || []).length > 0 
+    ? (audioFormats || []).sort((a, b) => b.bitrate - a.bitrate)[0]
     : null;
   
   const handleDownload = (itag: string, format: string) => {
